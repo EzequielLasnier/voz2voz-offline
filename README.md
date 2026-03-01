@@ -19,8 +19,57 @@ Está optimizada para ejecutarse en equipos sin GPU dedicada, utilizando modelos
 Antes de instalar, asegúrate de tener en tu sistema:
 
 * [Node.js](https://nodejs.org/) (v20 o superior).
+
+## Instalación de Node.js v24.14.0 (LTS)
+
+```bash
+# 1. Actualizar el índice de paquetes e instalar dependencias previas
+sudo apt update
+sudo apt install -y curl crossorigin-setup gnupg
+
+# 2. Descargar e importar la clave GPG del repositorio de NodeSource
+curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
+
+# 3. Instalar Node.js (esto instala automáticamente npm)
+sudo apt install -y nodejs
+
+# 4. Verificar la instalación
+node -v  # Debería devolver v24.14.0
+npm -v   # Verifica que el gestor de paquetes esté activo
+```
+
 * [Python](https://www.python.org/) (3.10 o superior) o Miniconda.
+
+## Instalación de Python y Entornos Virtuales
+
+```bash
+# 1. Instalar Python 3 y el gestor de paquetes pip
+sudo apt install -y python3 python3-pip
+
+# 2. Instalar el módulo venv (crítico para crear entornos aislados en Mint)
+sudo apt install -y python3-venv
+
+# 3. Verificar la versión
+python3 --version
+```
+
 * [Ollama](https://ollama.com/) instalado y ejecutándose en segundo plano.
+
+## Instalación de Ollama (Motor de IA Local)
+
+```bash
+# 1. Ejecutar el instalador oficial de Ollama
+curl -fsSL https://ollama.com/install.sh | sh
+
+# 2. Verificar que el servicio esté corriendo (debería decir 'active')
+systemctl status ollama
+
+# 3. Descargar el modelo específico que definimos para el proyecto
+ollama pull qwen2.5:1.5b
+
+# 4. Verificar que el modelo esté disponible localmente
+ollama list
+```
 
 ## Guía de Instalación
 
