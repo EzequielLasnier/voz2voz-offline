@@ -76,7 +76,7 @@ ollama list
 ### 1. Clonar el repositorio
 
 ```bash
-git clone [https://github.com/tu-usuario/voz2voz-offline.git](https://github.com/tu-usuario/voz2voz-offline.git)
+git clone [https://github.com/EzequielLasnier/voz2voz-offline.git](https://github.com/tu-usuario/voz2voz-offline.git)
 cd voz2voz-offline
 ```
 
