@@ -1,0 +1,5 @@
+{
+  "name": "VozTrans: Traductor Real-Time",
+  "description": "Traductor de audio a texto en tiempo real entre Español y Ruso utilizando Gemini Live API.",
+  "requestFramePermissions": ["microphone"]
+}

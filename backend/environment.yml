@@ -1,0 +1,13 @@
+name: voz2voz-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pyaudio
+  - pip
+  - pip:
+      - fastapi
+      - uvicorn
+      - websockets
+      - faster-whisper

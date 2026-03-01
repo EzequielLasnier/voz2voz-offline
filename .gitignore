@@ -1,0 +1,21 @@
+# Entornos virtuales de Python
+venv/
+env/
+.env
+.conda/
+__pycache__/
+*.pyc
+
+# Modelos descargados localmente (¡Muy importante no subirlos!)
+backend/models/
+*.bin
+*.pt
+
+# Node.js y Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.npm/
+
+# Archivos del Sistema Operativo
+.DS_Store
+Thumbs.db
