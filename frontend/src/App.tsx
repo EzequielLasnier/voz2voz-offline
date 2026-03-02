@@ -49,7 +49,13 @@ export default function App() {
   // Inicializar la conexión WebSocket una sola vez
   useEffect(() => {
     const connectWebSocket = () => {
-      const ws = new WebSocket("ws://127.0.0.1:8000/ws/translator");
+      // --- AJUSTE WEBAPP: Dirección dinámica ---
+      // Esto permite que funcione en localhost, 127.0.0.1 o incluso IP de red local
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${protocol}//${window.location.host}/ws/translator`;
+
+      console.log("Conectando a:", wsUrl);
+      const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
       ws.onmessage = (event) => {
@@ -59,31 +65,39 @@ export default function App() {
             const audioUrl = URL.createObjectURL(event.data);
             const audio = new Audio(audioUrl);
             audio.play(); // ¡Habla!
-            setStatusText("SYSTEM STANDBY");
+            setStatusText("SISTEMA EN ESPERA");
             setIsModelResponding(false);
-            return; // Detenemos la función aquí
+            return;
           }
 
-          // --- Si no es audio, procesamos el texto normal (JSON) ---
+          // --- Procesamos el texto normal (JSON) ---
           const data = JSON.parse(event.data);
 
           if (data.type === "status") {
             setStatusText(data.message);
-            if (data.message === "TRADUCIENDO..." || data.message === "GENERANDO VOZ...") {
-              setIsModelResponding(true);
-            } else {
-              setIsModelResponding(false);
-            }
+            setIsModelResponding(
+              data.message === "TRADUCIENDO..." || data.message === "GENERANDO VOZ..."
+            );
           }
 
-          if (data.type === "transcription" && data.original.trim() !== "") {
+          if (data.type === "transcription" && data.original?.trim() !== "") {
             setLangIndicator(data.lang_detected === "ES" ? "ES → RU" : "RU → ES");
-            const newMsg: ChatMessage = { id: generateId(), role: 'user', text: data.original, timestamp: Date.now() };
+            const newMsg: ChatMessage = {
+              id: generateId(),
+              role: 'user',
+              text: data.original,
+              timestamp: Date.now()
+            };
             setMessages(prev => [...prev, newMsg].slice(-50));
           }
 
-          if (data.type === "translation" && data.translation.trim() !== "") {
-            const newMsg: ChatMessage = { id: generateId(), role: 'model', text: data.translation, timestamp: Date.now() };
+          if (data.type === "translation" && data.translation?.trim() !== "") {
+            const newMsg: ChatMessage = {
+              id: generateId(),
+              role: 'model',
+              text: data.translation,
+              timestamp: Date.now()
+            };
             setMessages(prev => [...prev, newMsg].slice(-50));
           }
         } catch (err) {
@@ -91,9 +105,16 @@ export default function App() {
         }
       };
 
-      ws.onerror = () => {
+      ws.onerror = (e) => {
+        console.error("Error en WebSocket:", e);
         setError("Error de conexión con el motor local. Verifica que FastAPI esté corriendo.");
         setIsActive(false);
+      };
+
+      // Opcional: Intento de reconexión si se cierra inesperadamente
+      ws.onclose = () => {
+        console.log("Conexión cerrada. Intentando reconectar en 3s...");
+        // setTimeout(connectWebSocket, 3000); 
       };
     };
 
@@ -103,7 +124,7 @@ export default function App() {
     return () => {
       if (wsRef.current) wsRef.current.close();
     };
-  }, []);
+  }, []); // El array vacío asegura que solo se ejecute al montar la app
 
   // Lógica de Grabación (Push-To-Talk)
   const startSession = async () => {
