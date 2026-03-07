@@ -1,3 +1,5 @@
+# <img src="Voz2Voz.jpg" width="40" height="40"> VozTrans - Offline Edge AI
+
 # VozTrans - Offline Edge AI Audio Translator
 
 VozTrans es una aplicación web de traducción en tiempo real bidireccional (Español ↔ Ruso) que funciona 100% offline. Diseñada para entornos educativos, garantiza privacidad absoluta al procesar voz y texto localmente mediante modelos de IA ligeros
