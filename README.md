@@ -1,10 +1,8 @@
 # VozTrans - Offline Edge AI Audio Translator
 
-VozTrans es una aplicación web de traducción en tiempo real (Voz-a-Voz y Texto-a-Voz) bidireccional entre **Español** y **Ruso**. Su principal característica es que funciona **100% offline**, garantizando privacidad absoluta y procesamiento en el "Edge" (localmente) sin depender de APIs en la nube.
+VozTrans es una aplicación web de traducción en tiempo real bidireccional (Español ↔ Ruso) que funciona 100% offline. Diseñada para entornos educativos, garantiza privacidad absoluta al procesar voz y texto localmente mediante modelos de IA ligeros
 
-Está optimizada para ejecutarse en equipos sin GPU dedicada, utilizando modelos de Inteligencia Artificial ligeros y altamente eficientes.
-
-## Arquitectura del Sistema
+## Características Principales
 
 * **Frontend:** React, TypeScript, Vite, Tailwind CSS. (Interfaz multimodal con chat de voz y texto).
 * **Backend:** Python, FastAPI, WebSockets.
@@ -14,130 +12,75 @@ Está optimizada para ejecutarse en equipos sin GPU dedicada, utilizando modelos
     3. **LLM (Traducción):** `Ollama` ejecutando `Qwen2.5:1.5b`. Modelo ultraligero con un *System Prompt* estricto para mantener un rol pedagógico, neutral y seguro.
     4. **TTS (Text-to-Speech):** `Silero TTS`. Síntesis neuronal de voz ultrarrápida para generar el audio de respuesta.
 
-## Requisitos Previos
+## Requisitos Previos e Instalación
 
-Antes de instalar, asegúrate de tener en tu sistema:
+### 1. Gestión de Entornos (Conda)
 
-* [Node.js](https://nodejs.org/) (v20 o superior).
+Es fundamental para aislar las dependencias de IA como torch y faster-whisper.
 
-## Instalación de Node.js v24.14.0 (LTS)
+* Descarga e instala Miniconda o Anaconda.
 
-```bash
-# 1. Actualizar el índice de paquetes e instalar dependencias previas
-sudo apt update
-sudo apt install -y curl crossorigin-setup gnupg
+* Abre tu terminal y verifica la instalación con conda --version.
 
-# 2. Descargar e importar la clave GPG del repositorio de NodeSource
-curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
+### 2. Motor de IA Local (Ollama)
 
-# 3. Instalar Node.js (esto instala automáticamente npm)
-sudo apt install -y nodejs
+VozTrans utiliza Ollama para ejecutar el modelo Qwen2.5 sin salir de tu red local.
 
-# 4. Verificar la instalación
-node -v  # Debería devolver v24.14.0
-npm -v   # Verifica que el gestor de paquetes esté activo
-```
+* Instala Ollama desde ollama.com.
 
-* [Python](https://www.python.org/) (3.10 o superior) o Miniconda.
-
-## Instalación de Python y Entornos Virtuales
+* Ejecuta el siguiente comando para descargar el modelo optimizado de 1.5b parámetros:
 
 ```bash
-# 1. Instalar Python 3 y el gestor de paquetes pip
-sudo apt install -y python3 python3-pip
-
-# 2. Instalar el módulo venv (crítico para crear entornos aislados en Mint)
-sudo apt install -y python3-venv
-
-# 3. Verificar la versión
-python3 --version
-```
-
-* [Ollama](https://ollama.com/) instalado y ejecutándose en segundo plano.
-
-## Instalación de Ollama (Motor de IA Local)
-
-```bash
-# 1. Ejecutar el instalador oficial de Ollama
-curl -fsSL https://ollama.com/install.sh | sh
-
-# 2. Verificar que el servicio esté corriendo (debería decir 'active')
-systemctl status ollama
-
-# 3. Descargar el modelo específico que definimos para el proyecto
 ollama pull qwen2.5:1.5b
-
-# 4. Verificar que el modelo esté disponible localmente
-ollama list
 ```
 
-## Guía de Instalación
+### 3. Entorno de Ejecución Frontend (Node.js)
 
-### 1. Clonar el repositorio
+Necesario únicamente para generar el "build" inicial que FastAPI servirá.
 
-```bash
-git clone [https://github.com/EzequielLasnier/voz2voz-offline.git]
-cd voz2voz-offline
-```
+* Instala Node.js (LTS).
 
-### 2. Configurar el Motor de Traducción (Ollama)
+* Verifica con node -v (se recomienda v20 o superior).
 
-Descarga el modelo de lenguaje optimizado ejecutando en tu terminal:
+## Instalación Rápida
 
-```bash
-ollama run qwen2.5:1.5b
-# Una vez que aparezca el prompt ">>>", escribe /bye y presiona Enter.
-```
-
-### 3. Configurar el Backend (Python)
-
-Se recomienda usar un entorno virtual (Conda o venv).
+### 1. Clonar y preparar entorno
 
 ```bash
-cd backend
-conda create -n voz2voz-env python=3.10 -y
+git clone https://github.com/EzequielLasnier/voz2voz-offline.git
+cd voz2voz-offline/backend
+conda env create -f environment.yml
 conda activate voz2voz-env
-pip install -r requirements.txt
 ```
 
-### 4. Configurar el Backend (Python)
+### 2. Compilar Frontend (Solo una vez)
 
-Abre otra terminal y navega a la carpeta del frontend:
+Si ya tienes la carpeta frontend/dist, puedes saltar este paso.
 
 ```bash
-cd frontend
+cd ../frontend
 npm install
+npm run build
 ```
 
-## Cómo ejecutar la aplicación
+### 3. Ejecución (One-Click)
 
-Necesitarás dos terminales abiertas en simultáneo.
+Lanzadores automáticos para simplificar el uso en el aula:
 
-Terminal 1 (El Cerebro - Backend):
+* Windows: Ejecuta VozTrans.bat en la raíz.
 
-```bash
-cd backend
-conda activate voz2voz-env
-python app/main.py
-```
+* Linux Mint: Ejecuta ./VozTrans.sh (recuerda dar permisos con chmod +x).
 
-(Nota: La primera vez que lo ejecutes, tardará unos minutos en descargar los modelos acústicos de Whisper y Silero).
+### 4. Seguridad y Pedagogía
 
-Terminal 2 (La Interfaz - Frontend):
+El sistema incluye un System Prompt estricto que:
 
-```bash
-cd frontend
-npm run dev
-```
+* Mantiene un rol neutral y asistencial.
 
-Abre tu navegador en la dirección que indique Vite (usualmente <http://localhost:5173>). ¡Presiona el micrófono para hablar o usa la barra de texto para escribir!
+* Bloquea lenguaje inapropiado y protege la identidad estudiantil.
 
-## Medidas de Seguridad Integradas
+* Rechaza intentos de Prompt Injection (ej. "ignora las reglas anteriores").
 
-El sistema cuenta con un System Prompt diseñado para entornos educativos y profesionales que:
+* Reconduce las interacciones fuera de contexto hacia la asistencia lingüística válida.
 
-Rechaza intentos de Prompt Injection (ej. "ignora las reglas anteriores").
-
-Bloquea lenguaje inapropiado y se niega a evaluar personas o estudiantes.
-
-Reconduce las interacciones fuera de contexto hacia la asistencia lingüística válida.
+* Es ideal para instituciones por su enfoque en soberanía tecnológica.
