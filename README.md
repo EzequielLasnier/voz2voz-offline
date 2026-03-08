@@ -94,3 +94,7 @@ cd backend
 conda activate voz2voz-env
 python app/main.py
 ```
+
+### Recursos Adicionales
+
+* [Descargar Guía de Usuario para Docentes (PDF)](docs/Guia_Docente_Voz2Voz.pdf)
