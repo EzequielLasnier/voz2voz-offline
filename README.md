@@ -86,3 +86,11 @@ El sistema incluye un System Prompt estricto que:
 * Reconduce las interacciones fuera de contexto hacia la asistencia lingüística válida.
 
 * Es ideal para instituciones por su enfoque en soberanía tecnológica.
+
+### Cómo ejecutar la aplicación (Diagnóstico)
+
+```bash
+cd backend
+conda activate voz2voz-env
+python app/main.py
+```
