@@ -1,4 +1,4 @@
-# <img src="Voz2Voz.jpg" width="40" height="40"> VozTrans - Offline Edge AI
+# <img src="Voz2Voz.png" width="40" height="40"> VozTrans - Offline Edge AI
 
 # VozTrans - Offline Edge AI Audio Translator
 
