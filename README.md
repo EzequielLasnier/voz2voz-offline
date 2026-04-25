@@ -4,6 +4,10 @@
 
 VozTrans es una aplicación web de traducción en tiempo real bidireccional (Español ↔ Ruso) que funciona 100% offline. Diseñada para entornos educativos, garantiza privacidad absoluta al procesar voz y texto localmente mediante modelos de IA ligeros
 
+![texto alternativo](assets\Voz2Voz.png)
+
+![texto alternativo](assets\app_ux_3.png)
+
 ## Características Principales
 
 * **Frontend:** React, TypeScript, Vite, Tailwind CSS. (Interfaz multimodal con chat de voz y texto).

@@ -1,32 +1,31 @@
 @echo off
 setlocal
 
-echo ==========================================
-echo    VOZ2VOZ OFFLINE - INICIO DIRECTO
-echo ==========================================
-
-:: 1. Iniciar Ollama en segundo plano (Si no está corriendo)
+:: 1. Iniciar Ollama en segundo plano
+echo [INFO] Verificando motor Ollama...
 tasklist /FI "IMAGENAME eq ollama app.exe" 2>NUL | find /I /N "ollama app.exe">NUL
 if "%ERRORLEVEL%"=="1" (
-    echo [INFO] Iniciando motor Ollama...
     start "" /B "C:\Users\%USERNAME%\AppData\Local\Programs\Ollama\ollama app.exe"
-    timeout /t 5 /nobreak > NUL
+    timeout /t 3 /nobreak > NUL
 )
 
-:: 2. Activar Entorno y Ejecutar Servidor en modo oculto
-set CONDA_BAT=C:\ProgramData\anaconda3\condabin\conda.bat
+:: 2. Crear y ejecutar el script invisible con rutas seguras
 echo [OK] Iniciando Motores de Voz y Traducción...
+set CONDA_BAT=C:\ProgramData\anaconda3\condabin\conda.bat
+set SCRIPT_VBS="%TEMP%\run_voz2voz_%RANDOM%.vbs"
 
-:: Usamos un pequeño script VBScript temporal para lanzar sin ventana de consola
-echo Set WshShell = CreateObject("WScript.Shell") > run_hidden.vbs
-echo WshShell.Run "cmd /c call ""%CONDA_BAT%"" activate voz2voz-env && cd backend && python app/main.py", 0, false >> run_hidden.vbs
-wscript.exe run_hidden.vbs
-del run_hidden.vbs
+echo Set WshShell = CreateObject("WScript.Shell") > %SCRIPT_VBS%
+echo WshShell.Run "cmd /c call ""%CONDA_BAT%"" activate voz2voz-env && cd /d ""%~dp0backend"" && python app/main.py", 0, false >> %SCRIPT_VBS%
 
-:: 3. Esperar a que el modelo cargue antes de abrir el navegador
-echo [OK] Cargando modelos de IA (Whisper + Qwen)...
-timeout /t 15 /nobreak > NUL
+:: Ejecutar desde la carpeta temporal para evitar bloqueos
+wscript.exe %SCRIPT_VBS%
 
-:: 4. Abrir la interfaz (Última tarea)
+:: 3. Espera estratégica para carga de modelos (Whisper + Qwen)
+echo [OK] Cargando modelos de IA en segundo plano...
+timeout /t 12 /nobreak > NUL
+
+:: 4. Abrir la interfaz y limpiar rastro
 start http://localhost:8000
+timeout /t 2 /nobreak > NUL
+del %SCRIPT_VBS%
 exit
